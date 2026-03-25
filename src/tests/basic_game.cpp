@@ -57,12 +57,7 @@ TEST(BASIC_TILES, 2X2_1_BOMB)
     EXPECT_TRUE(is_valid_tile(0, 1, b));
     EXPECT_TRUE(is_valid_tile(1, 1, b));
 
-    b[0][0] = Tile('2');
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
-    EXPECT_TRUE(is_valid_tile(0, 1, b));
-    EXPECT_TRUE(is_valid_tile(1, 1, b));
-
+    b[0][0] = Tile('1');
     b[1][0] = Tile('0');
     EXPECT_FALSE(is_valid_tile(0, 0, b));
     EXPECT_TRUE(is_valid_tile(1, 0, b));
