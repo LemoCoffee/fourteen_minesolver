@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "../basic.cpp"
+#include "../basic.h"
 
 TEST(BASIC_TILES, TILE_VALIDITY) {
     Board b = Board(2, 2, 1);
