@@ -20,6 +20,11 @@ bool is_valid_tile(const int x, const int y, const Board &board)
 
     for (int nx = x - 1; nx <= x + 1; nx++)
     {
+        if (!board.has_tile(nx, 0))
+        {
+            continue;
+        }
+
         for (int ny = y - 1; ny <= y + 1; ny++)
         {
             if (!board.has_tile(nx, ny) || (ny == y && nx == x))
@@ -42,7 +47,7 @@ bool is_valid_tile(const int x, const int y, const Board &board)
         }
     }
 
-    return (mine_count + unknown_count == (tile.value - '0'));
+    return (mine_count + unknown_count >= (tile.value - '0'));
 }
 
 bool is_valid_board(const Board &board)

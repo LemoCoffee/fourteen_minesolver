@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "../basic.h"
 
-TEST(BASIC_TILES, BASIC_TILE)
+TEST(BASIC_TILES, 2x2_UNKNOWNS_TILE)
 {
     Board b = Board(2, 2, 1);
 
@@ -10,6 +10,19 @@ TEST(BASIC_TILES, BASIC_TILE)
     EXPECT_TRUE(is_valid_tile(1, 0, b));
 
     b[1][0] = Tile::mine;
+    EXPECT_TRUE(is_valid_tile(0, 0, b));
+    EXPECT_TRUE(is_valid_tile(1, 0, b));
+}
+
+TEST(BASIC_TILES, BASIC_TILE)
+{
+    Board b = Board(3, 3, 1);
+
+    b[1][1] = Tile('1');
+    EXPECT_TRUE(is_valid_tile(0, 0, b));
+    EXPECT_TRUE(is_valid_tile(1, 0, b));
+
+    b[2][1] = Tile::mine;
     EXPECT_TRUE(is_valid_tile(0, 0, b));
     EXPECT_TRUE(is_valid_tile(1, 0, b));
 }
