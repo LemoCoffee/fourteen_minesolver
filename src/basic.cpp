@@ -1,50 +1,10 @@
 #include <vector>
-#include <limits>
 #include "basic.h"
 
 std::vector<Board> solve(const Board &puzzle)
 {
     std::vector<Board> output = {puzzle};
     return output;
-}
-
-int unknown_neighbors(const int x, const int y, const Board &board)
-{
-    int unknown_count = 0;
-    for (int nx = x - 1; nx <= x + 1; nx++)
-    {
-        if (!board.has_tile(nx, 0))
-        {
-            continue;
-        }
-
-        for (int ny = y - 1; ny <= y + 1; ny++)
-        {
-            if (!board.has_tile(nx, ny) || (ny == y && nx == x))
-            {
-                continue;
-            }
-            if (board[nx][ny].is_unknown())
-            {
-                unknown_count++;
-            }
-        }
-    }
-    return unknown_count;
-}
-
-static int tile_possibility_score(int x, int y, const Board &board)
-{
-    const Tile &tile = board[x][y];
-
-    if (tile.is_mine() || tile.is_unknown())
-    {
-        return std::numeric_limits<int>::max();
-    }
-
-    int clue = tile.value - '0';
-    int unknowns = unknown_neighbors(x, y, board);
-    return unknowns - clue;
 }
 
 bool is_valid_tile(const int x, const int y, const Board &board)
