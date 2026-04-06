@@ -64,3 +64,11 @@ TEST(BASIC_TILES, 2X2_1_BOMB)
     EXPECT_FALSE(is_valid_tile(0, 1, b));
     EXPECT_FALSE(is_valid_tile(1, 1, b));
 }
+
+TEST(BASIC_TILES, TILE_SCORING)
+{
+    Board b = Board(3, 3, 1);
+
+    b[1][1] = Tile('1');
+    EXPECT_EQ(b.tile_possibility_score(1, 1), 8);
+}
