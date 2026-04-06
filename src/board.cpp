@@ -49,7 +49,15 @@ int Board::tile_possibility_score(int x, int y)
         return std::numeric_limits<int>::max();
     }
 
-    int unknown_mines = tile.value - '1';
+    int known_mines = neighboring_flagged_as(x, y, Tile::mine_flag);
+    int clue = tile.value - '0';
+
+    if (clue == known_mines)
+    {
+        return 0;
+    }
+
+    int unknown_mines = clue - known_mines;
     int unknowns = neighboring_flagged_as(x, y, Tile::unknown_flag);
-    return unknowns - unknown_mines;
+    return possibilities[unknowns][unknown_mines];
 }
