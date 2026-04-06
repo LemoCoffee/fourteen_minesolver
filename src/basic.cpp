@@ -72,3 +72,29 @@ bool is_valid_board(const Board &board)
 
     return mine_count < board.mine_count;
 }
+
+bool reveal_guarantees(Board &board)
+{
+    bool changed = false;
+
+    for (int x = 0; x < board.width(); x++)
+    {
+        for (int y = 0; y < board.height(); y++)
+        {
+            if (board.tile_possibility_score(x, y) == 1)
+            {
+                for (Tile *t : board.neighbors_of(x, y))
+                {
+                    if (t->flags & Tile::unknown_flag)
+                    {
+                        t->flags |= Tile::mine_flag;
+                        t->flags &= ~(Tile::unknown_flag);
+                        changed = true;
+                    }
+                }
+            }
+        }
+    }
+
+    return changed;
+}
