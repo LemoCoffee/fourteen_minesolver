@@ -40,7 +40,7 @@ int Board::neighboring_flagged_as(int x, int y, unsigned short flags) const
     return flagged;
 }
 
-int Board::tile_possibility_score(int x, int y)
+int Board::tile_possibility_score(int x, int y) const
 {
     const Tile &tile = tiles[x][y];
 
@@ -60,4 +60,29 @@ int Board::tile_possibility_score(int x, int y)
     int unknown_mines = clue - known_mines;
     int unknowns = neighboring_flagged_as(x, y, Tile::unknown_flag);
     return possibilities[unknowns][unknown_mines];
+}
+
+std::vector<Tile *> Board::neighbors_of(const int x, const int y)
+{
+    std::vector<Tile *> out = std::vector<Tile *>();
+
+    for (int nx = x - 1; nx <= x + 1; nx++)
+    {
+        if (!has_tile(nx, 0))
+        {
+            continue;
+        }
+
+        for (int ny = y - 1; ny <= y + 1; ny++)
+        {
+            if (!has_tile(nx, ny) || (ny == y && nx == x))
+            {
+                continue;
+            }
+
+            out.push_back(&(tiles[nx][ny]));
+        }
+    }
+
+    return out;
 }
