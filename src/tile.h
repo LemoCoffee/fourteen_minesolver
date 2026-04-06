@@ -6,8 +6,8 @@ struct Tile
     char value;
     unsigned short flags;
 
-    static constexpr unsigned short mine_flag = 0b0000000000000001;
-    static constexpr unsigned short unknown_flag = 0b0000000000000010;
+    static constexpr unsigned short mine_flag = 0b10;
+    static constexpr unsigned short unknown_flag = 0b01;
 
     static const Tile mine;
     static const Tile unknown;
