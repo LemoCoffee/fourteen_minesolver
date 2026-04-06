@@ -1,6 +1,22 @@
 #include <gtest/gtest.h>
 #include "../basic.h"
 
+TEST(BASIC_TILES, FLAG_CHECKS)
+{
+    Board b = Board(1, 1, 1);
+
+    EXPECT_FALSE(b.is_mine(0, 0));
+    EXPECT_TRUE(b.is_unknown(0, 0));
+
+    b[0][0] = Tile('1');
+    EXPECT_FALSE(b.is_mine(0, 0));
+    EXPECT_FALSE(b.is_unknown(0, 0));
+
+    b[0][0] = Tile::mine;
+    EXPECT_TRUE(b.is_mine(0, 0));
+    EXPECT_FALSE(b.is_unknown(0, 0));
+}
+
 TEST(BASIC_TILES, 2x2_UNKNOWNS_TILE)
 {
     Board b = Board(2, 2, 1);
