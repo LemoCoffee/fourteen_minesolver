@@ -86,5 +86,22 @@ TEST(BASIC_TILES, TILE_SCORING)
     Board b = Board(3, 3, 1);
 
     b[1][1] = Tile('1');
+    EXPECT_EQ(b.unknown_neighbors(1, 1), 8);
     EXPECT_EQ(b.tile_possibility_score(1, 1), 8);
+
+    b[2][1] = Tile('1');
+    EXPECT_EQ(b.unknown_neighbors(1, 1), 7);
+    EXPECT_EQ(b.unknown_neighbors(2, 1), 4);
+    EXPECT_EQ(b.tile_possibility_score(1, 1), 7);
+    EXPECT_EQ(b.tile_possibility_score(2, 1), 4);
+
+    b[2][1] = Tile('2');
+    EXPECT_EQ(b.unknown_neighbors(2, 1), 4);
+    EXPECT_EQ(b.tile_possibility_score(2, 1), 6);
+
+    b[1][0] = Tile::mine;
+    EXPECT_EQ(b.unknown_neighbors(1, 1), 6);
+    EXPECT_EQ(b.unknown_neighbors(2, 1), 3);
+    EXPECT_EQ(b.tile_possibility_score(1, 1), 0);
+    EXPECT_EQ(b.tile_possibility_score(2, 1), 3);
 }
