@@ -102,6 +102,10 @@ TEST(BASIC_TILES, TILE_SCORING)
     b[1][0] = Tile::mine;
     EXPECT_EQ(b.neighboring_flagged_as(1, 1, Tile::unknown_flag), 6);
     EXPECT_EQ(b.neighboring_flagged_as(2, 1, Tile::unknown_flag), 3);
+
+    EXPECT_EQ(b.neighboring_flagged_as(1, 1, Tile::mine_flag), 1);
+    EXPECT_EQ(b.neighboring_flagged_as(2, 1, Tile::mine_flag), 1);
+
     EXPECT_EQ(b.tile_possibility_score(1, 1), 0);
     EXPECT_EQ(b.tile_possibility_score(2, 1), 3);
 }
