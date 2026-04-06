@@ -28,6 +28,7 @@ public:
     bool is_mine(const int x, const int y) const;
     bool is_unknown(const int x, const int y) const;
     int unknown_neighbors(const int x, const int y) const;
+    int neighboring_flagged_as(const int x, const int y, unsigned short flags) const;
     int tile_possibility_score(int x, int y);
 };
 
