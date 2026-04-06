@@ -1,4 +1,4 @@
 #include "tile.h"
 
-const Tile Tile::mine = Tile('m', 0b10);
-const Tile Tile::unknown = Tile(' ', 0b01);
+const Tile Tile::mine = Tile('m', Tile::mine_flag);
+const Tile Tile::unknown = Tile(' ', Tile::unknown_flag);
