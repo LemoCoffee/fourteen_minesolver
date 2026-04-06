@@ -25,6 +25,8 @@ public:
     int height() const { return tiles[0].size(); } // Assume board is always rectangular
 
     bool has_tile(const int x, const int y) const;
+    bool is_mine(const int x, const int y) const;
+    bool is_unknown(const int x, const int y) const;
     int unknown_neighbors(const int x, const int y) const;
     int tile_possibility_score(int x, int y);
 };

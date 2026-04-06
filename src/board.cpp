@@ -5,6 +5,16 @@ bool Board::has_tile(int x, int y) const
     return x >= 0 && x < width() && y >= 0 && y < height();
 }
 
+bool Board::is_mine(int x, int y) const
+{
+    return tiles[x][y].is_mine();
+}
+
+bool Board::is_unknown(int x, int y) const
+{
+    return tiles[x][y].is_unknown();
+}
+
 int Board::unknown_neighbors(int x, int y) const
 {
     int unknown_count = 0;
