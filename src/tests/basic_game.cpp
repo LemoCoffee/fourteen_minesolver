@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
-#include "../basic.h"
+#include "../variantBasic.h"
+
+static VariantBasic basic = VariantBasic();
 
 TEST(BASIC_TILES, FLAG_CHECKS)
 {
@@ -19,15 +21,16 @@ TEST(BASIC_TILES, FLAG_CHECKS)
 
 TEST(BASIC_TILES, 2x2_UNKNOWNS_TILE)
 {
+
     Board b = Board(2, 2, 1);
 
     b[0][0] = Tile('1');
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
 
     b[1][0] = Tile::mine;
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
 }
 
 TEST(BASIC_TILES, BASIC_TILE)
@@ -35,12 +38,12 @@ TEST(BASIC_TILES, BASIC_TILE)
     Board b = Board(3, 3, 1);
 
     b[1][1] = Tile('1');
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
 
     b[2][1] = Tile::mine;
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
 }
 
 TEST(BASIC_TILES, SINGLE_TILE)
@@ -48,7 +51,7 @@ TEST(BASIC_TILES, SINGLE_TILE)
     Board b = Board(1, 1, 0);
 
     b[0][0] = Tile('0');
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
 }
 
 TEST(BASIC_TILES, INSUFFICIENT_MINES)
@@ -59,7 +62,7 @@ TEST(BASIC_TILES, INSUFFICIENT_MINES)
     b[1][0] = Tile::unknown;
     b[0][1] = Tile::unknown;
     b[1][1] = Tile::unknown;
-    EXPECT_FALSE(is_valid_tile(0, 0, b));
+    EXPECT_FALSE(basic.is_valid_tile(0, 0, b));
 }
 
 TEST(BASIC_TILES, 2X2_1_BOMB)
@@ -68,17 +71,17 @@ TEST(BASIC_TILES, 2X2_1_BOMB)
 
     b[0][1] = Tile('1');
     b[1][1] = Tile('1');
-    EXPECT_TRUE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
-    EXPECT_TRUE(is_valid_tile(0, 1, b));
-    EXPECT_TRUE(is_valid_tile(1, 1, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(0, 1, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 1, b));
 
     b[0][0] = Tile('1');
     b[1][0] = Tile('0');
-    EXPECT_FALSE(is_valid_tile(0, 0, b));
-    EXPECT_TRUE(is_valid_tile(1, 0, b));
-    EXPECT_FALSE(is_valid_tile(0, 1, b));
-    EXPECT_FALSE(is_valid_tile(1, 1, b));
+    EXPECT_FALSE(basic.is_valid_tile(0, 0, b));
+    EXPECT_TRUE(basic.is_valid_tile(1, 0, b));
+    EXPECT_FALSE(basic.is_valid_tile(0, 1, b));
+    EXPECT_FALSE(basic.is_valid_tile(1, 1, b));
 }
 
 TEST(BASIC_TILES, NEIGHBOR_FLAG_COMPARISON)
