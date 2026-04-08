@@ -1,7 +1,7 @@
-#include "board.h"
-
 #ifndef VARIANT_H
 #define VARIANT_H
+
+#include "board.h"
 
 class IVariant
 {

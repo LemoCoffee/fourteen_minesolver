@@ -1,13 +1,13 @@
 #include <vector>
-#include "basic.h"
+#include "variantBasic.h"
 
-std::vector<Board> solve(const Board &puzzle)
+std::vector<Board> VariantBasic::solve(const Board &puzzle)
 {
     std::vector<Board> output = {puzzle};
     return output;
 }
 
-bool is_valid_tile(const int x, const int y, const Board &board)
+bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board)
 {
     const Tile &tile = board[x][y];
 
@@ -51,7 +51,7 @@ bool is_valid_tile(const int x, const int y, const Board &board)
     return (mine_count + unknown_count >= (tile.value - '0'));
 }
 
-bool is_valid_board(const Board &board)
+bool VariantBasic::is_valid_board(const Board &board)
 {
     int mine_count = 0;
 

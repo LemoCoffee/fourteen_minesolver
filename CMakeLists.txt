@@ -18,9 +18,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # Source files for the main application
 set(APP_SOURCES
     src/main.cpp
-    src/basic.cpp
     src/board.cpp
     src/tile.cpp
+    src/variantBasic.cpp
 )
 
 # Create main executable
@@ -33,6 +33,7 @@ include(FetchContent)
 FetchContent_Declare(
     googletest
     URL https://github.com/google/googletest/archive/v1.14.0.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP FALSE
 )
 
 # For Windows: Prevent overriding the parent project's compiler/linker settings
@@ -45,9 +46,9 @@ enable_testing()
 # Test executable
 add_executable(test_basic
     src/tests/basic_game.cpp
-    src/basic.cpp
     src/board.cpp
     src/tile.cpp
+    src/variantBasic.cpp
 )
 
 # Link gtest to test executable

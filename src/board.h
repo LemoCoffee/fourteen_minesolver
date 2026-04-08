@@ -1,9 +1,9 @@
-#include <vector>
-#include "tile.h"
-#include <limits>
-
 #ifndef BOARD_H
 #define BOARD_H
+
+#include <limits>
+#include <vector>
+#include "tile.h"
 
 class Board
 {
