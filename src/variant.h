@@ -9,8 +9,8 @@ public:
     virtual std::vector<Board> solve(const Board &puzzle);
     virtual std::vector<Board> get_possibilites(const int x, const int y, const Board &board);
 
-    virtual bool is_valid_tile(const int x, const int y, const Board &board);
-    virtual bool is_valid_board(const Board &board);
+    virtual bool is_valid_tile(const int x, const int y, const Board &board) const;
+    virtual bool is_valid_board(const Board &board) const;
 };
 
 // I want functions to be inherited and implemented by children, but I don't want variants to be instantiated or contain any info
