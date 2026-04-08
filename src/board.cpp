@@ -1,4 +1,5 @@
 #include "board.h"
+#include <stdexcept>
 
 bool Board::has_tile(int x, int y) const
 {
@@ -81,6 +82,31 @@ std::vector<Tile *> Board::neighbors_of(const int x, const int y)
             }
 
             out.push_back(&(tiles[nx][ny]));
+        }
+    }
+
+    return out;
+}
+
+bool Board::same_size_as(const Board &other) const
+{
+    return (width() == other.width() && height() == other.height() && mine_count() == other.mine_count());
+}
+
+Board Board::join(const Board &a, const Board &b)
+{
+    if (!a.same_size_as(b))
+    {
+        throw std::out_of_range("Boards are not the same size");
+    }
+
+    Board out = Board(a);
+
+    for (int x = 0; x < out.width(); x++)
+    {
+        for (int y = 0; y < out.height(); y++)
+        {
+            out[x][y].flags &= b[x][y].flags;
         }
     }
 

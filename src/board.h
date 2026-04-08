@@ -20,21 +20,41 @@ private:
         {1, 8, 28, 56, 70, 56, 28, 8, 1},    // 8
     };
 
+    int _mine_count;
+
 public:
     std::vector<std::vector<Tile>> tiles;
-    int mine_count;
 
-    Board(std::vector<std::vector<Tile>> &t, int mines) : tiles(t), mine_count(mines) {}
-    Board(int w, int h, int mines) : mine_count(mines)
+    Board(std::vector<std::vector<Tile>> &t, int mines) : _mine_count(mines), tiles(t) {}
+    Board(int w, int h, int mines) : _mine_count(mines)
     {
         tiles.resize(w, std::vector<Tile>(h, Tile::unknown));
+    }
+
+    Board(const Board &other)
+    {
+        tiles = std::vector<std::vector<Tile>>(other.tiles);
+        _mine_count = other.mine_count();
+    }
+
+    Board &operator=(const Board &other)
+    {
+        if (this != &other)
+        {
+            tiles = std::vector<std::vector<Tile>>(other.tiles);
+            _mine_count = other.mine_count();
+        }
+        return *this;
     }
 
     std::vector<Tile> &operator[](size_t x) { return tiles[x]; }
     const std::vector<Tile> &operator[](size_t x) const { return tiles[x]; }
 
+    std::vector<Tile> &operator&=(size_t x) { return tiles[x]; }
+
     int width() const { return tiles.size(); }
     int height() const { return tiles[0].size(); } // Assume board is always rectangular
+    int mine_count() const { return _mine_count; }
 
     std::vector<Tile *> neighbors_of(const int x, const int y);
 
@@ -43,6 +63,10 @@ public:
     bool is_unknown(const int x, const int y) const;
     int neighboring_flagged_as(const int x, const int y, unsigned short flags) const;
     int tile_possibility_score(int x, int y) const;
+
+    bool same_size_as(const Board &other) const;
+
+    static Board join(const Board &a, const Board &b);
 };
 
 #endif
