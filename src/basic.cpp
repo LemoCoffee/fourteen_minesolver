@@ -70,7 +70,7 @@ bool is_valid_board(const Board &board)
         }
     }
 
-    return mine_count < board.mine_count;
+    return mine_count < board.mine_count();
 }
 
 bool reveal_guarantees(Board &board)
