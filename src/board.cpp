@@ -16,6 +16,11 @@ bool Board::is_unknown(int x, int y) const
     return tiles[x][y].is_unknown();
 }
 
+int Board::neighboring_mines(const int x, const int y) const
+{
+    return (tiles[x][y].value - '0');
+}
+
 int Board::neighboring_flagged_as(int x, int y, unsigned short flags) const
 {
     int flagged = 0;
@@ -81,7 +86,32 @@ std::vector<Tile *> Board::neighbors_of(const int x, const int y)
                 continue;
             }
 
-            out.push_back(&(tiles[nx][ny]));
+            out.emplace_back(&(tiles[nx][ny]));
+        }
+    }
+
+    return out;
+}
+
+std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
+{
+    std::vector<const Tile *> out = std::vector<const Tile *>();
+
+    for (int nx = x - 1; nx <= x + 1; nx++)
+    {
+        if (!has_tile(nx, 0))
+        {
+            continue;
+        }
+
+        for (int ny = y - 1; ny <= y + 1; ny++)
+        {
+            if (!has_tile(nx, ny) || (ny == y && nx == x))
+            {
+                continue;
+            }
+
+            out.emplace_back(&(tiles[nx][ny]));
         }
     }
 
