@@ -140,3 +140,17 @@ TEST(BASIC_TILES, CORNER_TILE_SCORING)
     EXPECT_EQ(b.tile_possibility_score(1, 1), 0);
     EXPECT_EQ(b.tile_possibility_score(0, 1), 1);
 }
+
+TEST(BOARD_EXPLORE, BOARD_JOINING)
+{
+    Board a = Board(1, 1, 1);
+    Board b = Board(1, 1, 1);
+
+    a[0][0] = Tile::mine;
+    b[0][0] = Tile::mine;
+
+    Board joined_board = Board::join(a, b);
+
+    EXPECT_TRUE(joined_board[0][0].flags == Tile::mine.flags);
+    EXPECT_FALSE(joined_board[0][0].flags == Tile::unknown.flags);
+}
