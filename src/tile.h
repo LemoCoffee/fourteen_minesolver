@@ -11,6 +11,7 @@ struct Tile
 
     static const Tile mine;
     static const Tile unknown;
+    static const Tile empty;
 
     Tile(char v) : value(v), flags(0) {}
     Tile(char v, unsigned short f) : value(v), flags(f) {}
