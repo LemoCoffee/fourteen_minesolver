@@ -3,6 +3,36 @@
 
 static VariantBasic basic = VariantBasic();
 
+TEST(BOARD_METHODS, ACCESSING)
+{
+    Board b = Board(3, 3, 3);
+    b[1][1] = Tile('1');
+
+    EXPECT_EQ(b[1][1], Tile('1'));
+}
+
+TEST(BOARD_METHODS, NEIGHBORING_MINES)
+{
+    Board b = Board(3, 3, 3);
+    b[1][1] = Tile('1');
+
+    EXPECT_EQ(b.neighboring_mines(1, 1), 1);
+}
+
+TEST(BOARD_METHODS, NEIGHBORING_COORDINATES)
+{
+    Board b = Board(3, 3, 3);
+
+    std::vector<std::pair<int, int>> CENTER = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
+    EXPECT_EQ(b.coordinate_neighbors_of(1, 1), CENTER);
+
+    std::vector<std::pair<int, int>> EDGE = {{0, 0}, {0, 2}, {1, 0}, {1, 1}, {1, 2}};
+    EXPECT_EQ(b.coordinate_neighbors_of(0, 1), EDGE);
+
+    std::vector<std::pair<int, int>> CORNER = {{0, 1}, {1, 0}, {1, 1}};
+    EXPECT_EQ(b.coordinate_neighbors_of(0, 0), CORNER);
+}
+
 TEST(BASIC_TILES, FLAG_CHECKS)
 {
     Board b = Board(1, 1, 1);
@@ -156,4 +186,39 @@ TEST(BOARD_EXPLORE, BOARD_JOINING)
 
     EXPECT_TRUE(joined_board[0][0].flags == Tile::mine.flags);
     EXPECT_FALSE(joined_board[0][0].flags == Tile::unknown.flags);
+}
+
+TEST(BOARD_EXPLORE, TILE_PERMUTATIONS)
+{
+    Board board = Board(3, 1, 1);
+
+    board[1][0] = Tile('1');
+
+    Board EXPECTED_PERMUTATION_A = Board(board);
+    EXPECTED_PERMUTATION_A[0][0] = Tile::mine;
+    EXPECTED_PERMUTATION_A[2][0] = Tile::empty;
+    Board EXPECTED_PERMUTATION_B = Board(board);
+    EXPECTED_PERMUTATION_B[0][0] = Tile::empty;
+    EXPECTED_PERMUTATION_B[2][0] = Tile::mine;
+    std::vector<Board> EXPECTED_PERMUTATIONS = {EXPECTED_PERMUTATION_A, EXPECTED_PERMUTATION_B};
+
+    bool FOUND_A = false;
+    bool FOUND_B = false;
+
+    auto possibilities = basic.get_possibilites(1, 0, board);
+    for (Board &b : possibilities)
+    {
+        if (b == EXPECTED_PERMUTATION_A)
+        {
+            FOUND_A = true;
+        }
+
+        if (b == EXPECTED_PERMUTATION_B)
+        {
+            FOUND_B = true;
+        }
+    }
+
+    EXPECT_TRUE(FOUND_A);
+    EXPECT_TRUE(FOUND_B);
 }
