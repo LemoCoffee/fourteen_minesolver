@@ -17,6 +17,7 @@ struct Tile
     Tile(char v, unsigned short f) : value(v), flags(f) {}
 
     bool operator==(const Tile &rhs) const { return (flags ^ rhs.flags) == 0; }
+    bool operator!=(const Tile &rhs) const { return !(*this == rhs); }
 
     bool is_mine() const { return (flags & mine_flag) != 0; }
     bool is_unknown() const { return (flags & unknown_flag) != 0; }
