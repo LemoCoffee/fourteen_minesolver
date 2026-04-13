@@ -142,7 +142,7 @@ std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, con
     {
         for (int j = y - 1; j <= y + 1; j++)
         {
-            if (has_tile(i, j) && (i != x && j != y))
+            if (has_tile(i, j) && !(i == x && j == y))
             {
                 out.emplace_back(i, j);
             }
