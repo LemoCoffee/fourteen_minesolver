@@ -17,6 +17,22 @@ bool Board::operator==(const Board &rhs) const
     return true;
 }
 
+int Board::tiles_flagged_as(unsigned short flags) const
+{
+    int count = 0;
+    for (int x = 0; x < width(); x++)
+    {
+        for (int y = 0; y < height(); y++)
+        {
+            if (tiles[x][y].flags & flags)
+            {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
 bool Board::has_tile(int x, int y) const
 {
     return x >= 0 && x < width() && y >= 0 && y < height();

@@ -68,6 +68,8 @@ public:
 
     std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y) const;
 
+    int tiles_flagged_as(unsigned short flags) const;
+
     bool has_tile(const int x, const int y) const;
     bool is_mine(const int x, const int y) const;
     bool is_unknown(const int x, const int y) const;
