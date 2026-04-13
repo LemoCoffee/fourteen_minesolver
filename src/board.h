@@ -56,6 +56,8 @@ public:
 
     std::vector<Tile> &operator&=(size_t x) { return tiles[x]; }
 
+    bool operator==(const Board &rhs) const;
+
     int width() const { return tiles.size(); }
     int height() const { return tiles[0].size(); } // Assume board is always rectangular
     int mine_count() const { return _mine_count; }

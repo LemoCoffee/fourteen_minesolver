@@ -1,6 +1,22 @@
 #include "board.h"
 #include <stdexcept>
 
+bool Board::operator==(const Board &rhs) const
+{
+    for (int x = 0; x < width(); x++)
+    {
+        for (int y = 0; y < height(); y++)
+        {
+            if (tiles[x][y] != rhs[x][y])
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
 bool Board::has_tile(int x, int y) const
 {
     return x >= 0 && x < width() && y >= 0 && y < height();
