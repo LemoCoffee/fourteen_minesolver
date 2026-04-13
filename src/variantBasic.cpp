@@ -1,10 +1,65 @@
 #include <vector>
+#include <algorithm>
+#include <cmath>
 #include "variantBasic.h"
 
 std::vector<Board> VariantBasic::solve(const Board &puzzle)
 {
     std::vector<Board> output = {puzzle};
     return output;
+}
+
+std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, const Board &board)
+{
+    std::vector<Board> possibilities = std::vector<Board>();
+
+    if (!board.has_tile(x, y) || board[x][y] == Tile::unknown || board[x][y] == Tile::mine)
+    {
+        possibilities.emplace_back(Board(board));
+        return possibilities;
+    }
+
+    std::vector<std::pair<int, int>> neighbor_coords = board.coordinate_neighbors_of(x, y);
+    std::vector<std::pair<int, int>> unknown_neighbors = {};
+    /*std::copy_if(neighbor_coords.begin(), neighbor_coords.end(), std::back_inserter(unknown_neighbors), [board](std::pair<int, int> pos)
+                 { return board[pos].is_unknown(); });*/
+    for (std::pair<int, int> pos : neighbor_coords)
+    {
+        if (board[pos].is_unknown())
+        {
+            unknown_neighbors.emplace_back(pos);
+        }
+    }
+
+    int neighboring_mines = board.neighboring_mines(x, y);
+    int neighboring_flagged = board.neighboring_flagged_as(x, y, Tile::mine_flag);
+    int unflagged_mines = neighboring_mines - neighboring_flagged;
+
+    int num_unknown = unknown_neighbors.size();
+
+    for (unsigned int mask = pow(2, unflagged_mines) - 1; mask < (1U << num_unknown); mask++)
+    {
+        if (__builtin_popcount(mask) == unflagged_mines)
+        {
+            Board board_permutation = Board(board);
+
+            for (int j = 0; j < num_unknown; j++)
+            {
+                if (mask & (1U << j))
+                {
+                    board_permutation[unknown_neighbors[j]] = Tile::mine;
+                }
+                else
+                {
+                    board_permutation[unknown_neighbors[j]] = Tile::empty;
+                }
+            }
+
+            possibilities.emplace_back(board_permutation);
+        }
+    }
+
+    return possibilities;
 }
 
 bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board)
