@@ -222,3 +222,25 @@ TEST(BOARD_EXPLORE, TILE_PERMUTATIONS)
     EXPECT_TRUE(FOUND_A);
     EXPECT_TRUE(FOUND_B);
 }
+
+TEST(BASIC_GAME, SINGLE_TILE)
+{
+    Board b = Board(2, 1, 1);
+    b[0][0] = Tile('1');
+    Board solved = Board(b);
+    b[0][1] = Tile::mine;
+
+    EXPECT_EQ(basic.solve(b), solved);
+}
+
+TEST(BASIC_GAME, IMPLICATION)
+{
+    Board b = Board(3, 2, 2);
+    b[0][0] = Tile('1');
+    b[1][0] = Tile('2');
+    b[2][0] = Tile::empty;
+    Board solved = Board(b);
+    b[2][1] = Tile::mine;
+
+    EXPECT_EQ(basic.solve(b), solved);
+}
