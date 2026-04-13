@@ -63,7 +63,7 @@ public:
     std::vector<const Tile *> neighbors_of(const int x, const int y) const;
     std::vector<Tile *> neighbors_of(const int x, const int y);
 
-    std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y);
+    std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y) const;
 
     bool has_tile(const int x, const int y) const;
     bool is_mine(const int x, const int y) const;

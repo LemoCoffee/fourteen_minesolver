@@ -118,7 +118,7 @@ std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
     return out;
 }
 
-std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, const int y)
+std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, const int y) const
 {
     std::vector<std::pair<int, int>> out = {};
 
