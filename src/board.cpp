@@ -118,6 +118,24 @@ std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
     return out;
 }
 
+std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, const int y)
+{
+    std::vector<std::pair<int, int>> out = {};
+
+    for (int i = x - 1; i <= x + 1; i++)
+    {
+        for (int j = y - 1; j <= y + 1; j++)
+        {
+            if (has_tile(i, j) && (i != x && j != y))
+            {
+                out.emplace_back(i, j);
+            }
+        }
+    }
+
+    return out;
+}
+
 bool Board::same_size_as(const Board &other) const
 {
     return (width() == other.width() && height() == other.height() && mine_count() == other.mine_count());

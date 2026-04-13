@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <vector>
+#include <utility>
 #include "tile.h"
 
 class Board
@@ -50,6 +51,9 @@ public:
     std::vector<Tile> &operator[](size_t x) { return tiles[x]; }
     const std::vector<Tile> &operator[](size_t x) const { return tiles[x]; }
 
+    Tile &operator[](std::pair<int, int> pos) { return tiles[pos.first][pos.second]; }
+    const Tile &operator[](std::pair<int, int> pos) const { return tiles[pos.first][pos.second]; }
+
     std::vector<Tile> &operator&=(size_t x) { return tiles[x]; }
 
     int width() const { return tiles.size(); }
@@ -58,6 +62,8 @@ public:
 
     std::vector<const Tile *> neighbors_of(const int x, const int y) const;
     std::vector<Tile *> neighbors_of(const int x, const int y);
+
+    std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y);
 
     bool has_tile(const int x, const int y) const;
     bool is_mine(const int x, const int y) const;
