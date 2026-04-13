@@ -6,7 +6,7 @@
 class IVariant
 {
 public:
-    virtual std::vector<Board> solve(const Board &puzzle);
+    virtual Board solve(const Board &puzzle);
     virtual std::vector<Board> get_possibilites(const int x, const int y, const Board &board);
 
     virtual bool is_valid_tile(const int x, const int y, const Board &board) const;
