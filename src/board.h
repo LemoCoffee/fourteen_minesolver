@@ -4,6 +4,7 @@
 #include <limits>
 #include <vector>
 #include <utility>
+#include <stdexcept>
 #include "tile.h"
 
 class Board
@@ -32,27 +33,26 @@ public:
         tiles.resize(w, std::vector<Tile>(h, Tile::unknown));
     }
 
-    Board(const Board &other)
-    {
-        tiles = std::vector<std::vector<Tile>>(other.tiles);
-        _mine_count = other.mine_count();
-    }
+    Board(const Board &) = default;
+    Board &operator=(const Board &) = default;
 
-    Board &operator=(const Board &other)
+    Tile &at(size_t x, size_t y)
     {
-        if (this != &other)
+        if (x < width() && y < height())
         {
-            tiles = std::vector<std::vector<Tile>>(other.tiles);
-            _mine_count = other.mine_count();
+            return tiles[x][y];
         }
-        return *this;
+        else
+        {
+            throw std::out_of_range("index out of bounds");
+        }
     }
 
-    std::vector<Tile> &operator[](size_t x) { return tiles[x]; }
-    const std::vector<Tile> &operator[](size_t x) const { return tiles[x]; }
+    std::vector<Tile> &operator[](size_t x) { return tiles.at(x); }
+    const std::vector<Tile> &operator[](size_t x) const { return tiles.at(x); }
 
-    Tile &operator[](std::pair<int, int> pos) { return tiles[pos.first][pos.second]; }
-    const Tile &operator[](std::pair<int, int> pos) const { return tiles[pos.first][pos.second]; }
+    Tile &operator[](std::pair<int, int> pos) { return tiles.at(pos.first).at(pos.second); }
+    const Tile &operator[](std::pair<int, int> pos) const { return tiles.at(pos.first).at(pos.second); }
 
     std::vector<Tile> &operator&=(size_t x) { return tiles[x]; }
 
@@ -60,7 +60,7 @@ public:
     bool operator!=(const Board &rhs) const { return !(*this == rhs); }
 
     int width() const { return tiles.size(); }
-    int height() const { return tiles[0].size(); } // Assume board is always rectangular
+    int height() const { return tiles.empty() ? 0 : tiles[0].size(); } // Assume board is always rectangular
     int mine_count() const { return _mine_count; }
 
     std::vector<const Tile *> neighbors_of(const int x, const int y) const;
