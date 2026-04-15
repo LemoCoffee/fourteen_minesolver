@@ -1,6 +1,3 @@
-#include <vector>
-#include <algorithm>
-#include <cmath>
 #include "variantBasic.h"
 
 Board VariantBasic::collapse_possibilities(std::vector<Board> possibilities)
@@ -52,9 +49,8 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
     }
 
     std::vector<std::pair<int, int>> neighbor_coords = board.coordinate_neighbors_of(x, y);
+
     std::vector<std::pair<int, int>> unknown_neighbors = {};
-    /*std::copy_if(neighbor_coords.begin(), neighbor_coords.end(), std::back_inserter(unknown_neighbors), [board](std::pair<int, int> pos)
-                 { return board[pos].is_unknown(); });*/
     for (std::pair<int, int> pos : neighbor_coords)
     {
         if (board[pos].is_unknown())
@@ -69,7 +65,7 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
 
     int num_unknown = unknown_neighbors.size();
 
-    for (unsigned int mask = pow(2, unflagged_mines) - 1; mask < (1U << num_unknown); mask++)
+    for (unsigned int mask = (2 << unflagged_mines) - 1; mask < (1U << num_unknown); mask++)
     {
         if (__builtin_popcount(mask) == unflagged_mines)
         {
