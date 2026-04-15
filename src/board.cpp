@@ -1,5 +1,6 @@
 #include "board.h"
 #include <stdexcept>
+#include <limits>
 
 bool Board::operator==(const Board &rhs) const
 {
