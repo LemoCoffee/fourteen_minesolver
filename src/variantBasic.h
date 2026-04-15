@@ -5,8 +5,14 @@
 
 class VariantBasic
 {
+private:
+    Board collapse_possibilities(std::vector<Board> possibilities);
+
+    Board global_brute_force(const Board &board);
+    std::vector<Board> global_brute_force_helper(Board &board, const std::vector<std::pair<int, int>> &unknowns, int current_pos, int remaining_mines);
+
 public:
-    std::vector<Board> solve(const Board &puzzle);
+    Board solve(const Board &puzzle);
     std::vector<Board> get_possibilites(const int x, const int y, const Board &board);
 
     bool is_valid_tile(const int x, const int y, const Board &board);

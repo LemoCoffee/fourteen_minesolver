@@ -3,9 +3,41 @@
 #include <cmath>
 #include "variantBasic.h"
 
-std::vector<Board> VariantBasic::solve(const Board &puzzle)
+Board VariantBasic::collapse_possibilities(std::vector<Board> possibilities)
 {
-    std::vector<Board> output = {puzzle};
+    Board output = Board(possibilities[0]);
+    for (auto p : possibilities)
+    {
+        if (VariantBasic::is_valid_board(p))
+        {
+            output = Board::join(output, p);
+        }
+    }
+    return output;
+}
+
+Board VariantBasic::solve(const Board &puzzle)
+{
+
+    std::vector<Board> possibilities = {};
+
+    for (int x = 0; x < puzzle.width(); x++)
+    {
+        for (int y = 0; y < puzzle.height(); y++)
+        {
+            auto p = get_possibilites(x, y, puzzle);
+            for (auto b : p)
+            {
+                if (is_valid_board(b))
+                {
+                    possibilities.emplace_back(b);
+                }
+            }
+        }
+    }
+
+    auto output = global_brute_force(puzzle);
+
     return output;
 }
 
@@ -62,53 +94,120 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
     return possibilities;
 }
 
+Board VariantBasic::global_brute_force(const Board &board)
+{
+    auto unknown_coords = board.coordinates_flagged_as(Tile::unknown_flag);
+    int remaining_mines = std::max(0, board.mine_count() - board.tiles_flagged_as(Tile::mine_flag));
+
+    Board mutable_board = Board(board);
+    auto possibilities = VariantBasic::global_brute_force_helper(mutable_board, unknown_coords, 0, remaining_mines);
+
+    if (possibilities.size() == 0)
+    {
+        return board;
+    }
+
+    return collapse_possibilities(possibilities);
+}
+
+// Recursive method
+std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const std::vector<std::pair<int, int>> &unknowns, int current_pos, int remaining_mines)
+{
+    std::vector<Board> output = {};
+
+    if (remaining_mines == 0)
+    {
+        if (current_pos == unknowns.size())
+        {
+            output.emplace_back(board);
+        }
+        else
+        {
+            // Save original tiles to backtrack later
+            std::vector<Tile> original_tiles;
+            for (int i = current_pos; i < unknowns.size(); i++)
+            {
+                original_tiles.push_back(board[unknowns[i]]);
+                board[unknowns[i]] = Tile::empty;
+            }
+            if (VariantBasic::is_valid_board(board))
+            {
+                output.emplace_back(board);
+            }
+            // Backtrack
+            for (int i = current_pos; i < unknowns.size(); i++)
+            {
+                board[unknowns[i]] = original_tiles[i - current_pos];
+            }
+        }
+        return output;
+    }
+
+    if (current_pos == unknowns.size())
+    {
+        return output;
+    }
+
+    // Save original tile to backtrack
+    Tile original_tile = board[unknowns[current_pos]];
+
+    board[unknowns[current_pos]] = Tile::empty;
+    if (VariantBasic::is_valid_board(board))
+    {
+        auto without_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines);
+        output.insert(output.end(), without_mine.begin(), without_mine.end());
+    }
+
+    board[unknowns[current_pos]] = Tile::mine;
+    if (VariantBasic::is_valid_board(board))
+    {
+        auto with_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines - 1);
+        output.insert(output.end(), with_mine.begin(), with_mine.end());
+    }
+
+    // Backtrack
+    board[unknowns[current_pos]] = original_tile;
+
+    return output;
+}
+
 bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board)
 {
     const Tile &tile = board[x][y];
 
-    if (tile.is_mine() || tile.is_unknown())
+    if (tile.is_mine() || tile.is_unknown() || tile.is_empty())
     {
         return true;
     }
 
     int mine_count = 0;
     int unknown_count = 0;
+    int neighboring_mines = board.neighboring_mines(x, y);
 
-    for (int nx = x - 1; nx <= x + 1; nx++)
+    for (const auto &n : board.coordinate_neighbors_of(x, y))
     {
-        if (!board.has_tile(nx, 0))
+        if (board[n].is_mine())
         {
-            continue;
+            mine_count++;
+        }
+        if (board[n].is_unknown())
+        {
+            unknown_count++;
         }
 
-        for (int ny = y - 1; ny <= y + 1; ny++)
-        {
-            if (!board.has_tile(nx, ny) || (ny == y && nx == x))
-            {
-                continue;
-            }
-            if (board[nx][ny].is_mine())
-            {
-                mine_count++;
-            }
-            if (board[nx][ny].is_unknown())
-            {
-                unknown_count++;
-            }
-        }
-
-        if (mine_count > (tile.value - '0'))
+        if (mine_count > neighboring_mines)
         {
             return false;
         }
     }
 
-    return (mine_count + unknown_count >= (tile.value - '0'));
+    return (mine_count + unknown_count >= neighboring_mines);
 }
 
 bool VariantBasic::is_valid_board(const Board &board)
 {
-    int mine_count = 0;
+    int placed_mines = 0;
+    bool has_unknowns = false;
 
     for (int x = 0; x < board.width(); x++)
     {
@@ -120,12 +219,25 @@ bool VariantBasic::is_valid_board(const Board &board)
             }
             if (board[x][y].is_mine())
             {
-                mine_count++;
+                placed_mines++;
+            }
+            if (board[x][y].is_unknown())
+            {
+                has_unknowns = true;
             }
         }
     }
 
-    return mine_count < board.mine_count();
+    // If there are no unknown tiles, mine count must match exactly.
+    // Otherwise, the current mine count must not exceed the total allowed mines.
+    // This ensures that a fully revealed board is only valid if the mine count is exact,
+    // but partially revealed boards are valid as long as they do not exceed the mine limit.
+
+    if (!has_unknowns)
+    {
+        return placed_mines == board.mine_count();
+    }
+    return placed_mines <= board.mine_count();
 }
 
 bool reveal_guarantees(Board &board)
