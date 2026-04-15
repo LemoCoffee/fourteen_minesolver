@@ -168,6 +168,24 @@ std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, con
     return out;
 }
 
+std::vector<std::pair<int, int>> Board::coordinates_flagged_as(const unsigned short flags) const
+{
+    std::vector<std::pair<int, int>> out = {};
+
+    for (int i = 0; i < width(); i++)
+    {
+        for (int j = 0; j < height(); j++)
+        {
+            if (has_tile(i, j) && (tiles[i][j].flags == flags))
+            {
+                out.emplace_back(i, j);
+            }
+        }
+    }
+
+    return out;
+}
+
 bool Board::same_size_as(const Board &other) const
 {
     return (width() == other.width() && height() == other.height() && mine_count() == other.mine_count());
