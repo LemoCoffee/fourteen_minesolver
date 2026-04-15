@@ -204,7 +204,10 @@ Board Board::join(const Board &a, const Board &b)
     {
         for (int y = 0; y < out.height(); y++)
         {
-            out[x][y].flags &= b[x][y].flags;
+            if (out[x][y] != b[x][y])
+            {
+                out[x][y] = Tile::unknown;
+            }
         }
     }
 
