@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include "../utility.h"
 #include "../variantBasic.h"
 
 static VariantBasic basic = VariantBasic();
@@ -228,7 +229,7 @@ TEST(BASIC_GAME, SINGLE_TILE)
     Board b = Board(2, 1, 1);
     b[0][0] = Tile('1');
     Board solved = Board(b);
-    b[0][1] = Tile::mine;
+    solved[1][0] = Tile::mine;
 
     EXPECT_EQ(basic.solve(b), solved);
 }
@@ -240,7 +241,7 @@ TEST(BASIC_GAME, IMPLICATION)
     b[1][0] = Tile('2');
     b[2][0] = Tile::empty;
     Board solved = Board(b);
-    b[2][1] = Tile::mine;
+    solved[2][1] = Tile::mine;
 
     EXPECT_EQ(basic.solve(b), solved);
 }
