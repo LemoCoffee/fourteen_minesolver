@@ -115,6 +115,20 @@ TEST(BASIC_TILES, 2X2_1_BOMB)
     EXPECT_FALSE(basic.is_valid_tile(1, 1, b));
 }
 
+TEST(BASIC_TILES, TILE_VALIDITY_3x2)
+{
+    Board b = Board(3, 2, 2);
+    b[0][0] = Tile('1');
+    b[1][0] = Tile('2');
+    b[2][0] = Tile::empty;
+    b[2][1] = Tile::mine;
+
+    // 12?
+    //
+
+    EXPECT_TRUE(basic.is_valid_board(b));
+}
+
 TEST(BASIC_TILES, NEIGHBOR_FLAG_COMPARISON)
 {
     Board b = Board(3, 3, 1);
@@ -242,6 +256,17 @@ TEST(BASIC_GAME, IMPLICATION)
     b[2][0] = Tile::empty;
     Board solved = Board(b);
     solved[2][1] = Tile::mine;
+
+    EXPECT_EQ(basic.solve(b), solved);
+
+    b = Board(3, 3, 4);
+    b[0][1] = Tile('2');
+    b[2][1] = Tile('4');
+    solved = Board(b);
+    solved[2][0] = Tile::mine;
+    solved[2][2] = Tile::mine;
+    solved[0][0] = Tile::empty;
+    solved[0][2] = Tile::empty;
 
     EXPECT_EQ(basic.solve(b), solved);
 }
