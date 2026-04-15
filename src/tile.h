@@ -21,6 +21,7 @@ struct Tile
 
     bool is_mine() const { return (flags & mine_flag) != 0; }
     bool is_unknown() const { return (flags & unknown_flag) != 0; }
+    bool is_empty() const { return flags == 0 && value == '?'; }
 };
 
 #endif
