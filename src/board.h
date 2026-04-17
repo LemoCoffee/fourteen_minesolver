@@ -1,7 +1,9 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+#include <limits>
 #include <vector>
+#include <utility>
 #include <stdexcept>
 #include "tile.h"
 
