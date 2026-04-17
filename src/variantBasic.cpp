@@ -25,7 +25,7 @@ Board VariantBasic::collapse_possibilities(std::vector<Board> possibilities)
 
 Board VariantBasic::solve(const Board &puzzle)
 {
-
+    reset_statistics();
     std::vector<Board> possibilities = {};
 
     for (int x = 0; x < puzzle.width(); x++)
@@ -146,6 +146,7 @@ std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const s
                 board[unknowns[i]] = original_tiles[i - current_pos];
             }
         }
+
         return output;
     }
 
@@ -214,6 +215,8 @@ bool VariantBasic::is_valid_board(const Board &board) const
 {
     int placed_mines = 0;
     bool has_unknowns = false;
+
+    count_evaluation();
 
     for (int x = 0; x < board.width(); x++)
     {
