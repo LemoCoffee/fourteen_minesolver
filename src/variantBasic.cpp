@@ -2,12 +2,22 @@
 
 Board VariantBasic::collapse_possibilities(std::vector<Board> possibilities)
 {
+    bool found_board = false;
     Board output = Board(possibilities[0]);
-    for (auto p : possibilities)
+    for (const auto &p : possibilities)
     {
-        if (VariantBasic::is_valid_board(p))
+
+        if (is_valid_board(p))
         {
-            output = Board::join(output, p);
+            if (!found_board)
+            {
+                output = Board(p);
+                found_board = true;
+            }
+            else
+            {
+                output = Board::join(output, p);
+            }
         }
     }
     return output;
@@ -23,7 +33,7 @@ Board VariantBasic::solve(const Board &puzzle)
         for (int y = 0; y < puzzle.height(); y++)
         {
             auto p = get_possibilites(x, y, puzzle);
-            for (auto b : p)
+            for (const auto &b : p)
             {
                 if (is_valid_board(b))
                 {
@@ -51,7 +61,7 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
     std::vector<std::pair<int, int>> neighbor_coords = board.coordinate_neighbors_of(x, y);
 
     std::vector<std::pair<int, int>> unknown_neighbors = {};
-    for (std::pair<int, int> pos : neighbor_coords)
+    for (const std::pair<int, int> &pos : neighbor_coords)
     {
         if (board[pos].is_unknown())
         {
@@ -126,7 +136,7 @@ std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const s
                 original_tiles.push_back(board[unknowns[i]]);
                 board[unknowns[i]] = Tile::empty;
             }
-            if (VariantBasic::is_valid_board(board))
+            if (is_valid_board(board))
             {
                 output.emplace_back(board);
             }
@@ -148,14 +158,14 @@ std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const s
     Tile original_tile = board[unknowns[current_pos]];
 
     board[unknowns[current_pos]] = Tile::empty;
-    if (VariantBasic::is_valid_board(board))
+    if (is_valid_board(board))
     {
         auto without_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines);
         output.insert(output.end(), without_mine.begin(), without_mine.end());
     }
 
     board[unknowns[current_pos]] = Tile::mine;
-    if (VariantBasic::is_valid_board(board))
+    if (is_valid_board(board))
     {
         auto with_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines - 1);
         output.insert(output.end(), with_mine.begin(), with_mine.end());
@@ -167,7 +177,7 @@ std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const s
     return output;
 }
 
-bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board)
+bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board) const
 {
     const Tile &tile = board[x][y];
 
@@ -200,7 +210,7 @@ bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board)
     return (mine_count + unknown_count >= neighboring_mines);
 }
 
-bool VariantBasic::is_valid_board(const Board &board)
+bool VariantBasic::is_valid_board(const Board &board) const
 {
     int placed_mines = 0;
     bool has_unknowns = false;
