@@ -13,8 +13,12 @@ bool VariantDual::is_valid_board(const Board &board) const
             auto connected = board.orthogonal_coords(x, y);
 
             std::pair<int, int> *pair = nullptr;
+            bool all_empty = true;
 
-            for (auto n : connected) {
+            for (auto n : connected) { 
+                if (!board[n].is_empty()) {
+                    all_empty = false;
+                }
                 if (board[n].is_mine()) {
                     if (pair == nullptr) {
                         pair = &n;
@@ -22,6 +26,10 @@ bool VariantDual::is_valid_board(const Board &board) const
                         return false;
                     }
                 }
+            }
+
+            if (all_empty) {
+                return false;
             }
 
             connected = board.orthogonal_coords(pair->first, pair->second);
