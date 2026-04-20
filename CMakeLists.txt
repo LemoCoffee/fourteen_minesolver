@@ -22,6 +22,7 @@ set(APP_SOURCES
     src/tile.cpp
     src/variantBasic.cpp
     src/variantQuadrant.cpp
+    src/variant.cpp
 )
 
 # Create main executable
@@ -51,6 +52,7 @@ add_executable(test_basic
     src/tile.cpp
     src/variantBasic.cpp
     src/variantQuadrant.cpp
+    src/variant.cpp
 )
 
 # Link gtest to test executable

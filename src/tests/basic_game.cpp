@@ -220,7 +220,7 @@ TEST(BOARD_EXPLORE, TILE_PERMUTATIONS)
     bool FOUND_A = false;
     bool FOUND_B = false;
 
-    auto possibilities = basic.get_possibilites(1, 0, board);
+    auto possibilities = basic.get_possibilities(1, 0, board);
     for (Board &b : possibilities)
     {
         if (b == EXPECTED_PERMUTATION_A)
