@@ -6,6 +6,10 @@ bool VariantTriplet::is_valid_board(const Board &board) const
     {
         for (int y = 0; y < board.height(); y++)
         {
+            if (board[x][y].is_empty()) {
+                continue;
+            }
+            
             if (x < board.width() - 2) {
                 if (board[x][y].is_mine() && board[x + 1][y].is_mine() && board[x + 2][y].is_mine()) {
                     return false;

@@ -18,7 +18,7 @@ bool Board::operator==(const Board &rhs) const
     return true;
 }
 
-int Board::tiles_flagged_as(unsigned short flags) const
+int Board::flagged_count(unsigned short flags) const
 {
     int count = 0;
     for (int x = 0; x < width(); x++)
@@ -101,7 +101,7 @@ int Board::tile_possibility_score(int x, int y) const
     return possibilities[unknowns][unknown_mines];
 }
 
-std::vector<Tile *> Board::neighbors_of(const int x, const int y)
+std::vector<Tile *> Board::neighbors(const int x, const int y)
 {
     std::vector<Tile *> out = std::vector<Tile *>();
 
@@ -126,7 +126,7 @@ std::vector<Tile *> Board::neighbors_of(const int x, const int y)
     return out;
 }
 
-std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
+std::vector<const Tile *> Board::neighbors(const int x, const int y) const
 {
     std::vector<const Tile *> out = std::vector<const Tile *>();
 
@@ -151,7 +151,7 @@ std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
     return out;
 }
 
-std::vector<Tile *> Board::orthogonally_connected_to(const int x, const int y) {
+std::vector<Tile *> Board::orthogonal(const int x, const int y) {
     std::vector<Tile *> out;
 
     if (has_tile(x - 1, y)) {
@@ -173,7 +173,29 @@ std::vector<Tile *> Board::orthogonally_connected_to(const int x, const int y) {
     return out;
 }
 
-std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, const int y) const
+std::vector<std::pair<int, int>> Board::orthogonal_coords(const int x, const int y) {
+    std::vector<std::pair<int, int>> out;
+
+    if (has_tile(x - 1, y)) {
+        out.emplace_back((x - 1, y));
+    }
+
+    if (has_tile(x, y - 1)) {
+        out.emplace_back((x, y - 1));
+    }
+
+    if (has_tile(x + 1, y)) {
+        out.emplace_back((x + 1, y));
+    }
+
+    if (has_tile(x, y + 1)) {
+        out.emplace_back((x, y + 1));
+    }
+
+    return out;
+}
+
+std::vector<std::pair<int, int>> Board::neighbor_coords(const int x, const int y) const
 {
     std::vector<std::pair<int, int>> out = {};
 
@@ -191,7 +213,7 @@ std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, con
     return out;
 }
 
-std::vector<std::pair<int, int>> Board::coordinates_flagged_as(const unsigned short flags) const
+std::vector<std::pair<int, int>> Board::flagged_coords(const unsigned short flags) const
 {
     std::vector<std::pair<int, int>> out = {};
 

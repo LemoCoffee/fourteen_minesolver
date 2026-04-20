@@ -30,8 +30,8 @@ Board Variant::collapse_possibilities(const std::vector<Board> &possibilities)
 
 std::vector<Board> Variant::global_brute_force(const Board &board)
 {
-    auto unknown_coords = board.coordinates_flagged_as(Tile::unknown_flag);
-    int remaining_mines = std::max(0, board.mine_count() - board.tiles_flagged_as(Tile::mine_flag));
+    auto unknown_coords = board.flagged_coords(Tile::unknown_flag);
+    int remaining_mines = std::max(0, board.mine_count() - board.flagged_count(Tile::mine_flag));
 
     Board mutable_board = Board(board);
     auto possibilities = global_brute_force_helper(mutable_board, unknown_coords, 0, remaining_mines);

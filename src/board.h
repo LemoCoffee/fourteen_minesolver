@@ -54,8 +54,6 @@ public:
     Tile &operator[](std::pair<int, int> pos) { return tiles.at(pos.first).at(pos.second); }
     const Tile &operator[](std::pair<int, int> pos) const { return tiles.at(pos.first).at(pos.second); }
 
-    std::vector<Tile> &operator&=(size_t x) { return tiles[x]; }
-
     bool operator==(const Board &rhs) const;
     bool operator!=(const Board &rhs) const { return !(*this == rhs); }
 
@@ -63,17 +61,18 @@ public:
     int height() const { return tiles.empty() ? 0 : tiles[0].size(); } // Assume board is always rectangular
     int mine_count() const { return _mine_count; }
 
-    std::vector<const Tile *> neighbors_of(const int x, const int y) const;
-    std::vector<Tile *> neighbors_of(const int x, const int y);
+    std::vector<const Tile *> neighbors(const int x, const int y) const;
+    std::vector<Tile *> neighbors(const int x, const int y);
 
-    std::vector<const Tile *> orthogonally_connected_to(const int x, const int y) const;
-    std::vector<Tile *> orthogonally_connected_to(const int x, const int y);
+    std::vector<const Tile *> orthogonal(const int x, const int y) const;
+    std::vector<Tile *> orthogonal(const int x, const int y);
+    std::vector<std::pair<int, int>> orthogonal_coords(const int x, const int y);
 
-    std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y) const;
-    std::vector<std::pair<int, int>> coordinates_flagged_as(const unsigned short flags) const;
+    std::vector<std::pair<int, int>> neighbor_coords(const int x, const int y) const;
+    std::vector<std::pair<int, int>> flagged_coords(const unsigned short flags) const;
 
-    int tiles_flagged_as(unsigned short flags) const;
-
+    int flagged_count(unsigned short flags) const;
+    
     bool has_tile(const int x, const int y) const;
     bool is_mine(const int x, const int y) const;
     bool is_unknown(const int x, const int y) const;

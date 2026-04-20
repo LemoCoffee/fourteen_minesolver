@@ -36,7 +36,7 @@ std::vector<Board> VariantBasic::get_possibilities(const int x, const int y, con
         return possibilities;
     }
 
-    std::vector<std::pair<int, int>> neighbor_coords = board.coordinate_neighbors_of(x, y);
+    std::vector<std::pair<int, int>> neighbor_coords = board.neighbor_coords(x, y);
 
     std::vector<std::pair<int, int>> unknown_neighbors = {};
     for (const std::pair<int, int> &pos : neighbor_coords)
@@ -91,7 +91,7 @@ bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board) c
     int unknown_count = 0;
     int neighboring_mines = board.neighboring_mines(x, y);
 
-    for (const auto &n : board.coordinate_neighbors_of(x, y))
+    for (const auto &n : board.neighbor_coords(x, y))
     {
         if (board[n].is_mine())
         {
@@ -159,7 +159,7 @@ bool reveal_guarantees(Board &board)
         {
             if (board.tile_possibility_score(x, y) == 1)
             {
-                for (Tile *t : board.neighbors_of(x, y))
+                for (Tile *t : board.neighbors(x, y))
                 {
                     if (t->flags & Tile::unknown_flag)
                     {
