@@ -151,6 +151,28 @@ std::vector<const Tile *> Board::neighbors_of(const int x, const int y) const
     return out;
 }
 
+std::vector<Tile *> Board::orthogonally_connected_to(const int x, const int y) {
+    std::vector<Tile *> out;
+
+    if (has_tile(x - 1, y)) {
+        out.emplace_back(tiles[x - 1][y]);
+    }
+
+    if (has_tile(x, y - 1)) {
+        out.emplace_back(tiles[x][y - 1]);
+    }
+
+    if (has_tile(x + 1, y)) {
+        out.emplace_back(tiles[x + 1][y]);
+    }
+
+    if (has_tile(x, y + 1)) {
+        out.emplace_back(tiles[x][y + 1]);
+    }
+
+    return out;
+}
+
 std::vector<std::pair<int, int>> Board::coordinate_neighbors_of(const int x, const int y) const
 {
     std::vector<std::pair<int, int>> out = {};

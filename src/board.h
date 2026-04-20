@@ -66,6 +66,9 @@ public:
     std::vector<const Tile *> neighbors_of(const int x, const int y) const;
     std::vector<Tile *> neighbors_of(const int x, const int y);
 
+    std::vector<const Tile *> orthogonally_connected_to(const int x, const int y) const;
+    std::vector<Tile *> orthogonally_connected_to(const int x, const int y);
+
     std::vector<std::pair<int, int>> coordinate_neighbors_of(const int x, const int y) const;
     std::vector<std::pair<int, int>> coordinates_flagged_as(const unsigned short flags) const;
 
