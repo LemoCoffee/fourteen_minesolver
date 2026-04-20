@@ -1,6 +1,6 @@
 #include "variant.h"
 
-Board IVariant::solve(const Board &puzzle)
+Board Variant::solve(const Board &puzzle)
 {
     reset_statistics();
     
@@ -9,7 +9,7 @@ Board IVariant::solve(const Board &puzzle)
     return collapse_possibilities(output);
 }
 
-Board IVariant::collapse_possibilities(const std::vector<Board> &possibilities)
+Board Variant::collapse_possibilities(const std::vector<Board> &possibilities)
 {
     bool found_board = false;
     Board output = Board(possibilities[0]);
@@ -28,7 +28,7 @@ Board IVariant::collapse_possibilities(const std::vector<Board> &possibilities)
     return output;
 }
 
-std::vector<Board> IVariant::global_brute_force(const Board &board)
+std::vector<Board> Variant::global_brute_force(const Board &board)
 {
     auto unknown_coords = board.coordinates_flagged_as(Tile::unknown_flag);
     int remaining_mines = std::max(0, board.mine_count() - board.tiles_flagged_as(Tile::mine_flag));
@@ -44,7 +44,7 @@ std::vector<Board> IVariant::global_brute_force(const Board &board)
     return possibilities;
 }
 
-std::vector<Board> IVariant::global_brute_force_helper(Board &board, const std::vector<std::pair<int, int>> &unknowns, int current_pos, int remaining_mines)
+std::vector<Board> Variant::global_brute_force_helper(Board &board, const std::vector<std::pair<int, int>> &unknowns, int current_pos, int remaining_mines)
 {
     std::vector<Board> output = {};
 

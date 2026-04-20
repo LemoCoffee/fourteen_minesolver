@@ -7,12 +7,12 @@ struct SolverInfo {
     size_t evaluations;
 };
 
-class IVariant
+class Variant
 {
 private:
     SolverInfo* statistics = new SolverInfo();
 public:
-    virtual ~IVariant() = default;
+    virtual ~Variant() = default;
 
     virtual Board solve(const Board &puzzle);
     virtual std::vector<Board> get_possibilities(const int x, const int y, const Board &board) = 0;

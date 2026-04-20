@@ -3,7 +3,7 @@
 
 #include "variant.h"
 
-class VariantBasic : public IVariant
+class VariantBasic : public Variant
 {
 public:
     std::vector<Board> get_possibilities(const int x, const int y, const Board &board) override;
