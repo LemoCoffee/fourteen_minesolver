@@ -57,23 +57,10 @@ int Board::neighboring_mines(const int x, const int y) const
 int Board::neighboring_flagged_as(int x, int y, unsigned short flags) const
 {
     int flagged = 0;
-    for (int nx = x - 1; nx <= x + 1; nx++)
-    {
-        if (!this->has_tile(nx, 0))
+    for (auto p : neighbors(x, y)) {
+        if (p->flags & flags)
         {
-            continue;
-        }
-
-        for (int ny = y - 1; ny <= y + 1; ny++)
-        {
-            if (!this->has_tile(nx, ny) || (ny == y && nx == x))
-            {
-                continue;
-            }
-            if (tiles[nx][ny].flags & flags)
-            {
-                flagged++;
-            }
+            flagged++;
         }
     }
     return flagged;
@@ -103,24 +90,10 @@ int Board::tile_possibility_score(int x, int y) const
 
 std::vector<Tile *> Board::neighbors(const int x, const int y)
 {
-    std::vector<Tile *> out = std::vector<Tile *>();
+    std::vector<Tile *> out;
 
-    for (int nx = x - 1; nx <= x + 1; nx++)
-    {
-        if (!has_tile(nx, 0))
-        {
-            continue;
-        }
-
-        for (int ny = y - 1; ny <= y + 1; ny++)
-        {
-            if (!has_tile(nx, ny) || (ny == y && nx == x))
-            {
-                continue;
-            }
-
-            out.emplace_back(&(tiles[nx][ny]));
-        }
+    for (auto p : neighbor_coords(x, y)) {
+        out.emplace_back(tiles[p.first][p.second]);
     }
 
     return out;
@@ -128,24 +101,10 @@ std::vector<Tile *> Board::neighbors(const int x, const int y)
 
 std::vector<const Tile *> Board::neighbors(const int x, const int y) const
 {
-    std::vector<const Tile *> out = std::vector<const Tile *>();
+    std::vector<const Tile *> out;
 
-    for (int nx = x - 1; nx <= x + 1; nx++)
-    {
-        if (!has_tile(nx, 0))
-        {
-            continue;
-        }
-
-        for (int ny = y - 1; ny <= y + 1; ny++)
-        {
-            if (!has_tile(nx, ny) || (ny == y && nx == x))
-            {
-                continue;
-            }
-
-            out.emplace_back(&(tiles[nx][ny]));
-        }
+    for (auto p : neighbor_coords(x, y)) {
+        out.emplace_back(tiles[p.first][p.second]);
     }
 
     return out;
@@ -154,26 +113,14 @@ std::vector<const Tile *> Board::neighbors(const int x, const int y) const
 std::vector<Tile *> Board::orthogonal(const int x, const int y) {
     std::vector<Tile *> out;
 
-    if (has_tile(x - 1, y)) {
-        out.emplace_back(tiles[x - 1][y]);
-    }
-
-    if (has_tile(x, y - 1)) {
-        out.emplace_back(tiles[x][y - 1]);
-    }
-
-    if (has_tile(x + 1, y)) {
-        out.emplace_back(tiles[x + 1][y]);
-    }
-
-    if (has_tile(x, y + 1)) {
-        out.emplace_back(tiles[x][y + 1]);
+    for (auto p : orthogonal_coords(x, y)) {
+        out.emplace_back(tiles[p.first][p.second]);
     }
 
     return out;
 }
 
-std::vector<std::pair<int, int>> Board::orthogonal_coords(const int x, const int y) {
+std::vector<std::pair<int, int>> Board::orthogonal_coords(const int x, const int y) const {
     std::vector<std::pair<int, int>> out;
 
     if (has_tile(x - 1, y)) {
