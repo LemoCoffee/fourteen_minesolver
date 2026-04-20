@@ -66,7 +66,7 @@ public:
 
     std::vector<const Tile *> orthogonal(const int x, const int y) const;
     std::vector<Tile *> orthogonal(const int x, const int y);
-    std::vector<std::pair<int, int>> orthogonal_coords(const int x, const int y);
+    std::vector<std::pair<int, int>> orthogonal_coords(const int x, const int y) const;
 
     std::vector<std::pair<int, int>> neighbor_coords(const int x, const int y) const;
     std::vector<std::pair<int, int>> flagged_coords(const unsigned short flags) const;
