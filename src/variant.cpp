@@ -50,7 +50,7 @@ std::vector<Board> Variant::global_brute_force_helper(Board &board, const std::v
 
     if (remaining_mines == 0)
     {
-        if (current_pos == unknowns.size())
+        if (static_cast<size_t>(current_pos) == unknowns.size())
         {
             output.emplace_back(board);
         }
@@ -58,7 +58,7 @@ std::vector<Board> Variant::global_brute_force_helper(Board &board, const std::v
         {
             // Save original tiles to backtrack later
             std::vector<Tile> original_tiles;
-            for (int i = current_pos; i < unknowns.size(); i++)
+            for (size_t i = static_cast<size_t>(current_pos); i < unknowns.size(); i++)
             {
                 original_tiles.push_back(board[unknowns[i]]);
                 board[unknowns[i]] = Tile::empty;
@@ -68,7 +68,7 @@ std::vector<Board> Variant::global_brute_force_helper(Board &board, const std::v
                 output.emplace_back(board);
             }
             // Backtrack
-            for (int i = current_pos; i < unknowns.size(); i++)
+            for (size_t i = static_cast<size_t>(current_pos); i < unknowns.size(); i++)
             {
                 board[unknowns[i]] = original_tiles[i - current_pos];
             }
@@ -77,7 +77,7 @@ std::vector<Board> Variant::global_brute_force_helper(Board &board, const std::v
         return output;
     }
 
-    if (current_pos == unknowns.size())
+    if (static_cast<size_t>(current_pos) == unknowns.size())
     {
         return output;
     }

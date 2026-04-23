@@ -38,7 +38,7 @@ public:
 
     Tile &at(size_t x, size_t y)
     {
-        if (x < width() && y < height())
+        if (x < static_cast<size_t>(width()) && y < static_cast<size_t>(height()))
         {
             return tiles[x][y];
         }

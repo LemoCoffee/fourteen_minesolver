@@ -82,7 +82,7 @@ bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board) c
 {
     const Tile &tile = board[x][y];
 
-    if (tile.is_mine() || tile.is_unknown() || tile.is_empty())
+    if (tile.is_mine() || tile.is_unknown() || tile.value == Tile::empty.value)
     {
         return true;
     }
