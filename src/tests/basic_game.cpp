@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "../utility.h"
 #include "../variantBasic.h"
+#include "../variantLiar.h"
 
 static VariantBasic basic = VariantBasic();
+static VariantLiar liar = VariantLiar();
 
 TEST(BOARD_METHODS, ACCESSING)
 {
@@ -187,6 +189,19 @@ TEST(BASIC_TILES, CORNER_TILE_SCORING)
     b[1][0] = Tile::mine;
     EXPECT_EQ(b.tile_possibility_score(1, 1), 0);
     EXPECT_EQ(b.tile_possibility_score(0, 1), 1);
+}
+
+TEST(LIAR_TILES, TILE_VALIDITY) {
+    Board b = Board(2, 2, 1);
+    b[0][0] = Tile('0');
+
+    EXPECT_TRUE(liar.is_valid_tile(0,0, b));
+    EXPECT_TRUE(liar.is_valid_board(b));
+
+    b[0][0] = Tile('2');
+
+    EXPECT_TRUE(liar.is_valid_tile(0,0, b));
+    EXPECT_TRUE(liar.is_valid_board(b));
 }
 
 TEST(BOARD_EXPLORE, BOARD_JOINING)

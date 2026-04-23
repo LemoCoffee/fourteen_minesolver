@@ -22,11 +22,16 @@ set(APP_SOURCES
     src/tile.cpp
     src/variantBasic.cpp
     src/variantQuadrant.cpp
+    src/variantTriplet.cpp
+    src/variantLiar.cpp
+    src/variantDual.cpp
+    src/variantBalance.cpp
     src/variant.cpp
 )
 
 # Create main executable
-add_executable(fourteen_minesolver ${APP_SOURCES})
+add_executable(fourteen_minesolver ${APP_SOURCES}
+    src/main.cpp)
 
 # ============================================================================
 # GoogleTest Setup
@@ -52,6 +57,10 @@ add_executable(test_basic
     src/tile.cpp
     src/variantBasic.cpp
     src/variantQuadrant.cpp
+    src/variantTriplet.cpp
+    src/variantLiar.cpp
+    src/variantDual.cpp
+    src/variantBalance.cpp
     src/variant.cpp
 )
 
