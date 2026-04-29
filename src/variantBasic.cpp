@@ -1,38 +1,16 @@
 #include "variantBasic.h"
 
-Board VariantBasic::collapse_possibilities(std::vector<Board> possibilities)
-{
-    bool found_board = false;
-    Board output = Board(possibilities[0]);
-    for (const auto &p : possibilities)
-    {
 
-        if (is_valid_board(p))
-        {
-            if (!found_board)
-            {
-                output = Board(p);
-                found_board = true;
-            }
-            else
-            {
-                output = Board::join(output, p);
-            }
-        }
-    }
-    return output;
-}
 
-Board VariantBasic::solve(const Board &puzzle)
-{
-    reset_statistics();
+std::vector<Board> VariantBasic::get_possibilities(const Board &board) {
+    /*
     std::vector<Board> possibilities = {};
 
     for (int x = 0; x < puzzle.width(); x++)
     {
         for (int y = 0; y < puzzle.height(); y++)
         {
-            auto p = get_possibilites(x, y, puzzle);
+            auto p = get_possibilities(x, y, puzzle);
             for (const auto &b : p)
             {
                 if (is_valid_board(b))
@@ -41,14 +19,14 @@ Board VariantBasic::solve(const Board &puzzle)
                 }
             }
         }
-    }
+    }    
+    */
+    auto possibilities = global_brute_force(board);
 
-    auto output = global_brute_force(puzzle);
-
-    return output;
+    return possibilities;
 }
 
-std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, const Board &board)
+std::vector<Board> VariantBasic::get_possibilities(const int x, const int y, const Board &board)
 {
     std::vector<Board> possibilities = std::vector<Board>();
 
@@ -58,7 +36,7 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
         return possibilities;
     }
 
-    std::vector<std::pair<int, int>> neighbor_coords = board.coordinate_neighbors_of(x, y);
+    std::vector<std::pair<int, int>> neighbor_coords = board.neighbor_coords(x, y);
 
     std::vector<std::pair<int, int>> unknown_neighbors = {};
     for (const std::pair<int, int> &pos : neighbor_coords)
@@ -100,89 +78,11 @@ std::vector<Board> VariantBasic::get_possibilites(const int x, const int y, cons
     return possibilities;
 }
 
-Board VariantBasic::global_brute_force(const Board &board)
-{
-    auto unknown_coords = board.coordinates_flagged_as(Tile::unknown_flag);
-    int remaining_mines = std::max(0, board.mine_count() - board.tiles_flagged_as(Tile::mine_flag));
-
-    Board mutable_board = Board(board);
-    auto possibilities = VariantBasic::global_brute_force_helper(mutable_board, unknown_coords, 0, remaining_mines);
-
-    if (possibilities.size() == 0)
-    {
-        return board;
-    }
-
-    return collapse_possibilities(possibilities);
-}
-
-// Recursive method
-std::vector<Board> VariantBasic::global_brute_force_helper(Board &board, const std::vector<std::pair<int, int>> &unknowns, int current_pos, int remaining_mines)
-{
-    std::vector<Board> output = {};
-
-    if (remaining_mines == 0)
-    {
-        if (current_pos == unknowns.size())
-        {
-            output.emplace_back(board);
-        }
-        else
-        {
-            // Save original tiles to backtrack later
-            std::vector<Tile> original_tiles;
-            for (int i = current_pos; i < unknowns.size(); i++)
-            {
-                original_tiles.push_back(board[unknowns[i]]);
-                board[unknowns[i]] = Tile::empty;
-            }
-            if (is_valid_board(board))
-            {
-                output.emplace_back(board);
-            }
-            // Backtrack
-            for (int i = current_pos; i < unknowns.size(); i++)
-            {
-                board[unknowns[i]] = original_tiles[i - current_pos];
-            }
-        }
-
-        return output;
-    }
-
-    if (current_pos == unknowns.size())
-    {
-        return output;
-    }
-
-    // Save original tile to backtrack
-    Tile original_tile = board[unknowns[current_pos]];
-
-    board[unknowns[current_pos]] = Tile::empty;
-    if (is_valid_board(board))
-    {
-        auto without_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines);
-        output.insert(output.end(), without_mine.begin(), without_mine.end());
-    }
-
-    board[unknowns[current_pos]] = Tile::mine;
-    if (is_valid_board(board))
-    {
-        auto with_mine = global_brute_force_helper(board, unknowns, current_pos + 1, remaining_mines - 1);
-        output.insert(output.end(), with_mine.begin(), with_mine.end());
-    }
-
-    // Backtrack
-    board[unknowns[current_pos]] = original_tile;
-
-    return output;
-}
-
 bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board) const
 {
     const Tile &tile = board[x][y];
 
-    if (tile.is_mine() || tile.is_unknown() || tile.is_empty())
+    if (tile.is_mine() || tile.is_unknown() || tile.value == Tile::empty.value)
     {
         return true;
     }
@@ -191,7 +91,7 @@ bool VariantBasic::is_valid_tile(const int x, const int y, const Board &board) c
     int unknown_count = 0;
     int neighboring_mines = board.neighboring_mines(x, y);
 
-    for (const auto &n : board.coordinate_neighbors_of(x, y))
+    for (const auto &n : board.neighbor_coords(x, y))
     {
         if (board[n].is_mine())
         {
@@ -259,7 +159,7 @@ bool reveal_guarantees(Board &board)
         {
             if (board.tile_possibility_score(x, y) == 1)
             {
-                for (Tile *t : board.neighbors_of(x, y))
+                for (Tile *t : board.neighbors(x, y))
                 {
                     if (t->flags & Tile::unknown_flag)
                     {

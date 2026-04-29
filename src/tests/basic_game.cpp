@@ -1,8 +1,10 @@
 #include <gtest/gtest.h>
 #include "../utility.h"
 #include "../variantBasic.h"
+#include "../variantLiar.h"
 
 static VariantBasic basic = VariantBasic();
+static VariantLiar liar = VariantLiar();
 
 TEST(BOARD_METHODS, ACCESSING)
 {
@@ -25,13 +27,13 @@ TEST(BOARD_METHODS, NEIGHBORING_COORDINATES)
     Board b = Board(3, 3, 3);
 
     std::vector<std::pair<int, int>> CENTER = {{0, 0}, {0, 1}, {0, 2}, {1, 0}, {1, 2}, {2, 0}, {2, 1}, {2, 2}};
-    EXPECT_EQ(b.coordinate_neighbors_of(1, 1), CENTER);
+    EXPECT_EQ(b.neighbor_coords(1, 1), CENTER);
 
     std::vector<std::pair<int, int>> EDGE = {{0, 0}, {0, 2}, {1, 0}, {1, 1}, {1, 2}};
-    EXPECT_EQ(b.coordinate_neighbors_of(0, 1), EDGE);
+    EXPECT_EQ(b.neighbor_coords(0, 1), EDGE);
 
     std::vector<std::pair<int, int>> CORNER = {{0, 1}, {1, 0}, {1, 1}};
-    EXPECT_EQ(b.coordinate_neighbors_of(0, 0), CORNER);
+    EXPECT_EQ(b.neighbor_coords(0, 0), CORNER);
 }
 
 TEST(BASIC_TILES, FLAG_CHECKS)
@@ -189,6 +191,19 @@ TEST(BASIC_TILES, CORNER_TILE_SCORING)
     EXPECT_EQ(b.tile_possibility_score(0, 1), 1);
 }
 
+TEST(LIAR_TILES, TILE_VALIDITY) {
+    Board b = Board(2, 2, 1);
+    b[0][0] = Tile('0');
+
+    EXPECT_TRUE(liar.is_valid_tile(0,0, b));
+    EXPECT_TRUE(liar.is_valid_board(b));
+
+    b[0][0] = Tile('2');
+
+    EXPECT_TRUE(liar.is_valid_tile(0,0, b));
+    EXPECT_TRUE(liar.is_valid_board(b));
+}
+
 TEST(BOARD_EXPLORE, BOARD_JOINING)
 {
     Board a = Board(1, 1, 1);
@@ -220,7 +235,7 @@ TEST(BOARD_EXPLORE, TILE_PERMUTATIONS)
     bool FOUND_A = false;
     bool FOUND_B = false;
 
-    auto possibilities = basic.get_possibilites(1, 0, board);
+    auto possibilities = basic.get_possibilities(1, 0, board);
     for (Board &b : possibilities)
     {
         if (b == EXPECTED_PERMUTATION_A)
